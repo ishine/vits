@@ -133,6 +133,10 @@ def train_and_evaluate(epoch_str, rank, hps, nets, optims, schedulers, scaler, l
   if writers is not None:
     writer, writer_eval = writers
 
+  # the accumulated steps
+  accumulated_steps_d = 0
+  accumulated_steps_g = 0
+
   for epoch in range(epoch_str, hps.train.epochs + 1):
     
     train_loader.batch_sampler.set_epoch(epoch)
@@ -156,10 +160,6 @@ def train_and_evaluate(epoch_str, rank, hps, nets, optims, schedulers, scaler, l
     iter_losses_gen = []
     iter_losses_disc_r = []
     iter_losses_disc_g = []
-
-    # the accumulated steps
-    accumulated_steps_d = 0
-    accumulated_steps_g = 0
 
     for batch_idx, (x, x_lengths, spec, spec_lengths, y, y_lengths) in enumerate(train_loader):
 
@@ -300,7 +300,9 @@ def train_and_evaluate(epoch_str, rank, hps, nets, optims, schedulers, scaler, l
       # if this is the root node log stuff
       if rank == 0:
 
-        logger.info("Finished global step " + str(global_step))
+        if accumulated_steps_d == 0 and \
+           accumulated_steps_g == 0:
+            logger.info("Finished global step " + str(global_step))
 
         if global_step % hps.train.log_interval == 0 and \
            accumulated_steps_d == 0 and \
