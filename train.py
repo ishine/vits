@@ -99,13 +99,29 @@ def run(rank, n_gpus, hps):
   net_g = DDP(net_g, device_ids=[rank])
   net_d = DDP(net_d, device_ids=[rank])
 
-  try:
-    _, _, _, epoch_str = utils.load_checkpoint(utils.latest_checkpoint_path(hps.model_dir, "G_*.pth"), net_g, optim_g)
-    _, _, _, epoch_str = utils.load_checkpoint(utils.latest_checkpoint_path(hps.model_dir, "D_*.pth"), net_d, optim_d)
-    global_step = (epoch_str - 1) * len(train_loader) / hps.train.grad_accumulation
-  except:
-    epoch_str = 1
-    global_step = 0
+  if hps.load.fine_tune:
+    
+    try:
+      _, _, _, epoch_str = utils.load_checkpoint(hps.load.generator_file, net_g, None)
+      _, _, _, epoch_str = utils.load_checkpoint(hps.load.discriminator_file, net_d, None)
+      global_step = (epoch_str - 1) * len(train_loader) / hps.train.grad_accumulation
+
+      epoch_str = 1
+      global_step = 0
+
+    except:
+      epoch_str = 1
+      global_step = 0
+
+  else:
+
+    try:
+      _, _, _, epoch_str = utils.load_checkpoint(utils.latest_checkpoint_path(hps.model_dir, "G_*.pth"), net_g, optim_g)
+      _, _, _, epoch_str = utils.load_checkpoint(utils.latest_checkpoint_path(hps.model_dir, "D_*.pth"), net_d, optim_d)
+      global_step = (epoch_str - 1) * len(train_loader) / hps.train.grad_accumulation
+    except:
+      epoch_str = 1
+      global_step = 0
 
   scheduler_g = torch.optim.lr_scheduler.ExponentialLR(optim_g, gamma=hps.train.lr_decay, last_epoch=epoch_str-2)
   scheduler_d = torch.optim.lr_scheduler.ExponentialLR(optim_d, gamma=hps.train.lr_decay, last_epoch=epoch_str-2)
@@ -145,23 +161,28 @@ def train_and_evaluate(epoch_str, rank, hps, nets, optims, schedulers, scaler, l
     net_d.train()
 
     # iteration losses for the descriminator
-    iter_loss_disc = 0
+    iter_loss_disc = 0.0
 
     # iteration losses for the generator 
-    iter_loss_gen = 0
-    iter_loss_fm = 0
-    iter_loss_mel = 0
-    iter_loss_dur = 0
-    iter_loss_kl = 0 
-    iter_loss_gen_all = 0
-    iter_loss_disc_all = 0  
+    iter_loss_gen = 0.0
+    iter_loss_fm = 0.0
+    iter_loss_mel = 0.0
+    iter_loss_dur = 0.0
+    iter_loss_kl = 0.0
+    iter_loss_gen_all = 0.0
+    iter_loss_disc_all = 0.0
 
     # array of iteration losses
     iter_losses_gen = []
     iter_losses_disc_r = []
     iter_losses_disc_g = []
 
+    total_iter = (len(train_loader) // grad_accumulation) * grad_accumulation
     for batch_idx, (x, x_lengths, spec, spec_lengths, y, y_lengths) in enumerate(train_loader):
+      
+      # avoid using a batch that is not going to make a whole grad accumulation
+      if batch_idx >= total_iter:
+        break
 
       x, x_lengths = x.cuda(rank, non_blocking=True), x_lengths.cuda(rank, non_blocking=True)
       spec, spec_lengths = spec.cuda(rank, non_blocking=True), spec_lengths.cuda(rank, non_blocking=True)
@@ -200,7 +221,7 @@ def train_and_evaluate(epoch_str, rank, hps, nets, optims, schedulers, scaler, l
           loss_disc_all /= grad_accumulation
 
           iter_loss_disc += loss_disc / grad_accumulation
-
+          iter_loss_disc_all += loss_disc_all
           # update the losses_disc_r
           idx = 0
           for l in losses_disc_r:
@@ -263,8 +284,8 @@ def train_and_evaluate(epoch_str, rank, hps, nets, optims, schedulers, scaler, l
           iter_loss_dur += (loss_dur / grad_accumulation)
           iter_loss_kl += (loss_kl / grad_accumulation)
 
-          iter_loss_gen_all += (loss_gen_all / grad_accumulation)
-          iter_loss_disc_all += (loss_disc_all / grad_accumulation)
+          iter_loss_gen_all += loss_gen_all
+          
 
           idx = 0
           for l in losses_gen:
