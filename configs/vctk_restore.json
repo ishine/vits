@@ -1,6 +1,8 @@
 {
   "load": {
-    "fine_tune": false
+    "fine_tune": true,
+    "generator_file":"vits/pretrained_vctk_g.pth",
+    "discriminator_file":"vits/pretrained_vctk_d.pth"
   },
   "train": {
     "grad_accumulation": 2,
@@ -8,7 +10,7 @@
     "eval_interval": 200,
     "seed": 1234,
     "epochs": 10000,
-    "learning_rate": 2e-4,
+    "learning_rate": 2e-7,
     "betas": [0.8, 0.99],
     "eps": 1e-9,
     "batch_size": 32,

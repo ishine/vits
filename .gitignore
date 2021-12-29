@@ -3,10 +3,14 @@ DUMMY2
 DUMMY3
 LJSpeech-1.1
 logs
+generated
 __pycache__
 .ipynb_checkpoints
 .*.swp
-
+venv
+vits
+VCTK
 build
 *.c
 monotonic_align/monotonic_align
+VCTK-Corpus
