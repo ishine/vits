@@ -1,4 +1,5 @@
-# Ongoing: Zero-shot TTS based on [VITS](https://arxiv.org/abs/2106.06103) (Conditional Variational Autoencoder with Adversarial Learning for End-to-End Text-to-Speech)
+# (Ongoing) Zero-shot TTS based on VITS
+[VITS](https://arxiv.org/abs/2106.06103): Conditional Variational Autoencoder with Adversarial Learning for End-to-End Text-to-Speech
 
 ## Note
 0. This repository aims to implement a VITS-based zero-shot TTS system varying with diverse style/speaker conditioning methods.
