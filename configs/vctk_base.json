@@ -17,9 +17,10 @@
     "c_kl": 1.0
   },
   "data": {
-    "training_files":"filelists/vctk_audio_sid_text_train_filelist.txt.cleaned",
-    "validation_files":"filelists/vctk_audio_sid_text_val_filelist.txt.cleaned",
-    "text_cleaners":["english_cleaners2"],
+    "training_files":"filelists/train.txt",
+    "validation_files":"filelists/val.txt",
+    "data_path":"/home/hcy71/DATA/preprocessed_data/LibriTTS/wav22",
+    "text_cleaners":["english_cleaners"],
     "max_wav_value": 32768.0,
     "sampling_rate": 22050,
     "filter_length": 1024,
