@@ -3,10 +3,10 @@
 ## Note
 0. This repository aims to implement a VITS-based zero-shot TTS system varying with diverse style/speaker conditioning methods.
 
-|Model Index|Text Encoder|Flow|Posterior Encoder|Vocoder|
+|Model|Text Encoder|Flow|Posterior Encoder|Vocoder|
 |------|-----|-----|-----|-----|
-|`M1`(YourTTS)|Output addition|Global conditioning|Global conditioning|Input addition
-|`M2`(Proposed)|SC-CNN|SC-CNN|SC-CNN|TBD|
+|`master`(YourTTS)|Output addition|Global conditioning|Global conditioning|Input addition
+|`s1`(Proposed)|SC-CNN|SC-CNN|SC-CNN|TBD|
 
 
 ## Pre-requisites
