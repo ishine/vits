@@ -1,6 +1,6 @@
 import argparse
 import text
-from utils import load_filepaths_and_text
+from utils import load_filepaths_and_text_pre
 import random
 
 if __name__ == '__main__':
@@ -8,12 +8,12 @@ if __name__ == '__main__':
   parser.add_argument("--text_index", default=1, type=int)
   parser.add_argument("--metadata", nargs="+", default="filelists/metadata.csv")
   # parser.add_argument("--metadata", nargs="+", default="filelists/metadata.csv")
-  parser.add_argument("--text_cleaners", nargs="+", default=["english_cleaners"])
+  parser.add_argument("--text_cleaners", nargs="+", default=["english_cleaners2"])
 
   args = parser.parse_args()
 
       
-  filepaths_and_text = load_filepaths_and_text(args.metadata)
+  filepaths_and_text = load_filepaths_and_text_pre(args.metadata)
   for i in range(len(filepaths_and_text)):
     print(i, '/', len(filepaths_and_text))
     original_text = filepaths_and_text[i][args.text_index]

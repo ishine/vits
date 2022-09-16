@@ -80,10 +80,6 @@ def transliteration_cleaners(text):
   text = collapse_whitespace(text)
   return text
 
-'''
-Utilize Taco2-based cleaners instead of phonemizer
-'''
-
 # def english_cleaners(text):
 #   '''Pipeline for English text, including abbreviation expansion.'''
 #   text = convert_to_ascii(text)

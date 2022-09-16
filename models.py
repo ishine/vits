@@ -412,7 +412,6 @@ class MelStyleEncoder(nn.Module):
 
         self.slf_attn = modules.MultiHeadAttention(self.n_head, self.hidden_dim, 
                                 self.hidden_dim//self.n_head, self.hidden_dim//self.n_head, self.dropout) 
-
         self.fc = modules.LinearNorm(self.hidden_dim, self.out_dim)
 
     def temporal_avg_pool(self, x, mask=None):
@@ -426,13 +425,13 @@ class MelStyleEncoder(nn.Module):
         return out
 
     def forward(self, x, mask=None):
+        
         max_len = x.shape[1]
         if mask is not None:
               mask = (mask.int()==0).squeeze(1)
               slf_attn_mask = mask.unsqueeze(1).expand(-1, max_len, -1)
         else:
               slf_attn_mask = None
-        
         # spectral
         x = self.spectral(x)
         # temporal
@@ -523,17 +522,16 @@ class SynthesizerTrn(nn.Module):
       self.emb_g = nn.Embedding(n_speakers, gin_channels)
 
   def forward(self, x, x_lengths, y, y_lengths, sid=None):
-
+        
+    #* Style/Speaker vector extraction
+    y_mask = torch.unsqueeze(commons.sequence_mask(y_lengths, y.size(2)), 1).to(y.dtype) 
+    s = self.enc_r(y.transpose(1,2), y_mask).unsqueeze(-1) # [b, h, 1]
+    
     x, m_p, logs_p, x_mask = self.enc_p(x, x_lengths)
     if self.n_speakers > 0:
       g = self.emb_g(sid).unsqueeze(-1) # [b, h, 1]
     else:
       g = None
-    
-    y_mask = torch.unsqueeze(commons.sequence_mask(y_lengths, y.size(2)), 1).to(y.dtype)
-    
-    #* Style/Speaker vector extraction
-    s = self.enc_r(x.transpose(1,2), y_mask).unsqueeze(-1) # [b, h, 1]
     
     #* Posterior encoder - Global conditioning
     z, m_q, logs_q, _ = self.enc_q(y, y_lengths, g=s)
@@ -571,15 +569,17 @@ class SynthesizerTrn(nn.Module):
     o = self.dec(z_slice, g=s)
     return o, l_length, attn, ids_slice, x_mask, y_mask, (z, z_p, m_p, logs_p, m_q, logs_q)
 
-  def infer(self, x, x_lengths, sid=None, noise_scale=1, length_scale=1, noise_scale_w=1., max_len=None):
-    x, m_p, logs_p, x_mask = self.enc_p(x, x_lengths)
-    if self.n_speakers > 0:
-      g = self.emb_g(sid).unsqueeze(-1) # [b, h, 1]
-    else:
-      g = None
+  def infer(self, x, x_lengths, spec, sid=None, noise_scale=1, length_scale=1, noise_scale_w=1., max_len=None):
     
     #* Style/Speaker vector extraction
-    s = self.enc_r(x.transpose(1,2), None).unsqueeze(-1)
+    s = self.enc_r(spec.transpose(1,2), None).unsqueeze(-1)
+    
+    x, m_p, logs_p, x_mask = self.enc_p(x, x_lengths)
+    if self.n_speakers > 0:
+          g = self.emb_g(sid).unsqueeze(-1) # [b, h, 1]
+    else:
+          g = None
+    
     
     #* Duration predictor - Add to the encoder output
     if self.use_sdp:
