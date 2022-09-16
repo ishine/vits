@@ -197,7 +197,7 @@ class TextAudioSpeakerLoader(torch.utils.data.Dataset):
         audiopath, sid, text = audiopath_sid_text[0], audiopath_sid_text[1], audiopath_sid_text[2]
         text = self.get_text(text)
         spec, wav = self.get_audio(audiopath)
-        sid = '0'
+        sid = '0' #! Just in order to remove error. Actually, we do not guide spk info to the model. 
         sid = self.get_sid(sid)
         return (text, spec, wav, sid)
 
