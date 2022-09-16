@@ -27,8 +27,9 @@ cd monotonic_align
 python setup.py build_ext --inplace
 ```
 
-```
+
 ## Training Exmaple
+```
 python train_zs.py -c configs/libritts_base.json -m libritts_base
 ```
 
