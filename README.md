@@ -28,8 +28,7 @@ python setup.py build_ext --inplace
 
 
 ## Training Exmaple
-```sh
-# VCTK
+```
 python train_zs.py -c configs/libritts_base.json -m libritts_base
 ```
 
