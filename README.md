@@ -10,7 +10,8 @@
 |------|-----|-----|-----|-----|
 |`master`([YourTTS](https://arxiv.org/abs/2112.02418))|Output addition|Global conditioning|Global conditioning|Input addition
 |`transfer`([TransferTTS](https://arxiv.org/abs/2203.15447))|None|Global conditioning|None|None|
-|`s1`(Proposed)|SC-CNN|SC-CNN|SC-CNN|TBD|
+|`s1`(Proposed)|SC-CNN|Global Conditioning|Global Conditioning|Input addition|
+|`s2`(Proposed)|SC-CNN|SC-CNN|SC-CNN|TBD|
 
 
 ## Pre-requisites
