@@ -6,12 +6,16 @@
 0. To remove the secondary elements, we simply extract a style representation by jointly training a reference encoder from [StyleSpeech](https://arxiv.org/abs/2106.03153). In detail, 1. we do not utilize pretrained models (e.g., [Link1](https://arxiv.org/abs/2009.14153), [Link2](https://arxiv.org/abs/2006.11477)) as the reference encoder, 2. we do not apply meta-learning or speaker verification loss during training.
 0. [LibriTTS]((https://research.google/tools/datasets/libri-tts/)) dataset (train-clean-100 and train-clean-360) is used for training.
 
-Progress|Model|Text Encoder|Flow|Posterior Encoder|Vocoder|
-|--|------|-----|-----|-----|-----|
-|-[X]|`master`([YourTTS](https://arxiv.org/abs/2112.02418))|Output addition|Global conditioning|Global conditioning|Input addition
-|-[ ]|`transfer`([TransferTTS](https://arxiv.org/abs/2203.15447))|None|Global conditioning|None|None|
-|-[ ]|`s1`(Proposed)|SC-CNN|Global Conditioning|Global Conditioning|Input addition|
-|-[ ]|`s2`(Proposed)|SC-CNN|SC-CNN|SC-CNN|TBD|
+|Model|Text Encoder|Flow|Posterior Encoder|Vocoder|
+|------|-----|-----|-----|-----|
+|`master`([YourTTS](https://arxiv.org/abs/2112.02418))|Output addition|Global conditioning|Global conditioning|Input addition
+|`transfer`([TransferTTS](https://arxiv.org/abs/2203.15447))|None|Global conditioning|None|None|
+|`s1`(Proposed)|SC-CNN|Global Conditioning|Global Conditioning|Input addition|
+|`s2`(Proposed)|SC-CNN|SC-CNN|SC-CNN|TBD|
+-[X] `master`
+-[ ] `transfer`
+-[ ] `s1`
+-[ ] `s2`
 
 
 ## Pre-requisites
