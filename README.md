@@ -9,6 +9,7 @@
 |Model|Text Encoder|Flow|Posterior Encoder|Vocoder|
 |------|-----|-----|-----|-----|
 |`master`([YourTTS](https://arxiv.org/abs/2112.02418))|Output addition|Global conditioning|Global conditioning|Input addition
+|`transfer`([TransferTTS](https://arxiv.org/abs/2203.15447))|None|Global conditioning|None|None|
 |`s1`(Proposed)|SC-CNN|SC-CNN|SC-CNN|TBD|
 
 
