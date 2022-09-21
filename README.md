@@ -12,10 +12,11 @@
 |`transfer`([TransferTTS](https://arxiv.org/abs/2203.15447))|None|Global conditioning|None|None|
 |`s1`(Proposed)|SC-CNN|Global Conditioning|Global Conditioning|Input addition|
 |`s2`(Proposed)|SC-CNN|SC-CNN|SC-CNN|TBD|
--[X] `master`
--[ ] `transfer`
--[ ] `s1`
--[ ] `s2`
+
+- [x] `master`
+- [ ] `transfer`
+- [ ] `s1`
+- [ ] `s2`
 
 
 ## Pre-requisites
