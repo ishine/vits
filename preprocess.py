@@ -1,25 +1,33 @@
 import argparse
 import text
-from utils import load_filepaths_and_text
+from utils import load_filepaths_and_text_pre
+import random
 
 if __name__ == '__main__':
   parser = argparse.ArgumentParser()
-  parser.add_argument("--out_extension", default="cleaned")
   parser.add_argument("--text_index", default=1, type=int)
-  parser.add_argument("--filelists", nargs="+", default=["filelists/ljs_audio_text_val_filelist.txt", "filelists/ljs_audio_text_test_filelist.txt"])
+  parser.add_argument("--metadata", nargs="+", default="filelists/metadata.csv")
+  # parser.add_argument("--metadata", nargs="+", default="filelists/metadata.csv")
   parser.add_argument("--text_cleaners", nargs="+", default=["english_cleaners2"])
 
   args = parser.parse_args()
-    
 
-  for filelist in args.filelists:
-    print("START:", filelist)
-    filepaths_and_text = load_filepaths_and_text(filelist)
-    for i in range(len(filepaths_and_text)):
-      original_text = filepaths_and_text[i][args.text_index]
-      cleaned_text = text._clean_text(original_text, args.text_cleaners)
-      filepaths_and_text[i][args.text_index] = cleaned_text
+      
+  filepaths_and_text = load_filepaths_and_text_pre(args.metadata)
+  for i in range(len(filepaths_and_text)):
+    print(i, '/', len(filepaths_and_text))
+    original_text = filepaths_and_text[i][args.text_index]
+    cleaned_text = text._clean_text(original_text, args.text_cleaners)
+    filepaths_and_text[i][args.text_index] = cleaned_text
+    print(original_text,'\n', cleaned_text)
 
-    new_filelist = filelist + "." + args.out_extension
-    with open(new_filelist, "w", encoding="utf-8") as f:
-      f.writelines(["|".join(x) + "\n" for x in filepaths_and_text])
+  random.shuffle(filepaths_and_text)
+  num_train = int(len(filepaths_and_text)*0.95)
+  train_set = filepaths_and_text[:num_train]
+  val_set = filepaths_and_text[num_train:]
+  
+  with open('filelists/train.txt', 'w', encoding='utf-8') as f:
+    f.writelines(["|".join(x) + "\n" for x in train_set])
+
+  with open('filelists/val.txt', 'w', encoding='utf-8') as f:
+    f.writelines(["|".join(x) + "\n" for x in val_set])

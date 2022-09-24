@@ -156,7 +156,9 @@ class TextAudioSpeakerLoader(torch.utils.data.Dataset):
         3) computes spectrograms from audio files.
     """
     def __init__(self, audiopaths_sid_text, hparams):
-        self.audiopaths_sid_text = load_filepaths_and_text(audiopaths_sid_text)
+        self.audiopaths_sid_text = load_filepaths_and_text(hparams.data_path, audiopaths_sid_text)
+        # self.spk_dict = {}
+        
         self.text_cleaners = hparams.text_cleaners
         self.max_wav_value = hparams.max_wav_value
         self.sampling_rate = hparams.sampling_rate
@@ -185,18 +187,27 @@ class TextAudioSpeakerLoader(torch.utils.data.Dataset):
 
         audiopaths_sid_text_new = []
         lengths = []
+        # _sid_to_indexes = {} 
+        
         for audiopath, sid, text in self.audiopaths_sid_text:
             if self.min_text_len <= len(text) and len(text) <= self.max_text_len:
                 audiopaths_sid_text_new.append([audiopath, sid, text])
                 lengths.append(os.path.getsize(audiopath) // (2 * self.hop_length))
+                # if sid in _sid_to_indexes:
+                #     _sid_to_indexes[sid].append(i)
+                # else:
+                #     _sid_to_indexes[sid] = [i]
         self.audiopaths_sid_text = audiopaths_sid_text_new
         self.lengths = lengths
-
+        # self.sid_to_indexes = _sid_to_indexes
+        # print(len(self.sid_to_indexes), '!')
+        
     def get_audio_text_speaker_pair(self, audiopath_sid_text):
         # separate filename, speaker_id and text
         audiopath, sid, text = audiopath_sid_text[0], audiopath_sid_text[1], audiopath_sid_text[2]
         text = self.get_text(text)
         spec, wav = self.get_audio(audiopath)
+        sid = '0' #! Just in order to remove error. Actually, we do not guide spk info to the model. 
         sid = self.get_sid(sid)
         return (text, spec, wav, sid)
 
@@ -229,7 +240,10 @@ class TextAudioSpeakerLoader(torch.utils.data.Dataset):
         return text_norm
 
     def get_sid(self, sid):
+        
         sid = torch.LongTensor([int(sid)])
+        # sid = torch.LongTensor(self.sid_to_indexes[sid])
+        
         return sid
 
     def __getitem__(self, index):
