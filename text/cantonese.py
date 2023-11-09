@@ -53,6 +53,7 @@ def init_converter():
     from pathlib import Path
     this_dir = Path(__file__).parent.absolute()
     filename = this_dir / 'jyutjyu.json'
+    print(filename, filename.is_file())
     if filename.is_file():
         converter = opencc.OpenCC(str(filename))
     else:
