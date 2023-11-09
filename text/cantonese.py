@@ -3,7 +3,6 @@ import cn2an
 import opencc
 
 
-converter = opencc.OpenCC('jyutjyu')
 
 # List of (Latin alphabet, ipa) pairs:
 _latin_to_ipa = [(re.compile('%s' % x[0]), x[1]) for x in [
@@ -45,8 +44,18 @@ def latin_to_ipa(text):
         text = re.sub(regex, replacement, text)
     return text
 
+converter = None
+def init_converter():
+    global converter
+    from pathlib import Path
+    if Path('./jyutjyu.json').is_file():
+        converter = opencc.OpenCC('./jyutjyu.json')
+    else:
+        converter = opencc.OpenCC('jyutjyu')
 
 def cantonese_to_ipa(text):
+    if converter is None:
+        init_converter()
     text = number_to_cantonese(text.upper())
     text = converter.convert(text).replace('-','').replace('$',' ')
     text = re.sub(r'[A-Z]', lambda x: latin_to_ipa(x.group())+' ', text)
