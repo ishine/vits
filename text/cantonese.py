@@ -44,6 +44,8 @@ def latin_to_ipa(text):
         text = re.sub(regex, replacement, text)
     return text
 
+# see https://huggingface.co/spaces/csukuangfj/moe-tts/tree/main/chinese_dialect_lexicons
+# which is cloned from https://huggingface.co/spaces/skytnt/moe-tts
 converter = None
 def init_converter():
     global converter
