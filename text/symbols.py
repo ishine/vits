@@ -8,10 +8,11 @@ _punctuation = ',.!?-'
 _letters = 'AEINOQUabdefghijkmnoprstuvwyzʃʧ↓↑ '
 '''
 
-# japanese_cleaners2
+'''# japanese_cleaners2
 _pad        = '_'
 _punctuation = ',.!?-~…'
 _letters = 'AEINOQUabdefghijkmnoprstuvwyzʃʧʦ↓↑ '
+'''
 
 
 '''# korean_cleaners
@@ -62,11 +63,10 @@ _punctuation = ',.!?…'
 _letters = 'abdfghiklmnopstuvyzøŋȵɑɔɕəɤɦɪɿʑʔʰ̩̃ᴀᴇ15678 '
 '''
 
-'''# chinese_dialect_cleaners
+# chinese_dialect_cleaners
 _pad        = '_'
 _punctuation = ',.!?~…─'
 _letters = '#Nabdefghijklmnoprstuvwxyzæçøŋœȵɐɑɒɓɔɕɗɘəɚɛɜɣɤɦɪɭɯɵɷɸɻɾɿʂʅʊʋʌʏʑʔʦʮʰʷˀː˥˦˧˨˩̥̩̃̚ᴀᴇ↑↓∅ⱼ '
-'''
 
 # Export all symbols:
 symbols = [_pad] + list(_punctuation) + list(_letters)
