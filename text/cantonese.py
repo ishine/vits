@@ -49,9 +49,12 @@ def latin_to_ipa(text):
 converter = None
 def init_converter():
     global converter
+
     from pathlib import Path
-    if Path('./jyutjyu.json').is_file():
-        converter = opencc.OpenCC('./jyutjyu.json')
+    this_dir = Path(__file__).parent.absolute()
+    filename = this_dir / 'jyutjyu.json'
+    if filename.is_file():
+        converter = opencc.OpenCC(str(filename))
     else:
         converter = opencc.OpenCC('jyutjyu')
 
